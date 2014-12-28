@@ -46,6 +46,7 @@ h2 {padding-bottom: 10px;}
 	.actionButton.headphones span {background-image: url("images/headphones.png");}
 	.actionButton.sabnzb span {background-image: url("images/sab.png");}
 	.actionButton.utorrent span {background-image: url("images/utorrent.png");}
+        .actionButton.deluge span {background-image: url("images/deluge.png");}
 
 	.secondaryButtons {padding-top: 30px; width: 696px;}
 	.actionButton.icon span {background-position: 0 50%; background-repeat: no-repeat; padding-left: 25px;}
@@ -56,7 +57,7 @@ h2 {padding-bottom: 10px;}
 
 /* =========================================================
 
-	SICKBEARD LIST
+	TV LIST
 
 ========================================================= */
 .sickbeardShows {float: right; width: 205px; padding-bottom: 10px; margin-top: -35px;}
@@ -68,6 +69,16 @@ h2 {padding-bottom: 10px;}
 	.sickbeardShows li,
 	.seasonStarts li {padding: 10px 0; border-top: 1px solid rgba(0,0,0,0.1); position: relative;}
 	.sickbeardShows .showep {font-size: 80%;}
+
+.sonarrShows {float: right; width: 205px; padding-bottom: 10px; margin-top: -35px;}
+        .sonarrShows h3 {padding-bottom: 10px;}
+        .sonarrShows ul,
+        .sonarrShows li,
+        .seasonStarts ul,
+        .seasonStarts li {list-style: none; padding: 0; margin: 0;}
+        .sonarrShows li,
+        .seasonStarts li {padding: 10px 0; border-top: 1px solid rgba(0,0,0,0.1); position: relative;}
+        .sonarrShows .showep {font-size: 80%;}
 
 	.showPopup {position: absolute; width: auto; left: -146px; top: -72px; background: rgba(0,0,0,0.9); display: none; box-shadow: 0 0 20px rgba(0,0,0,0.2); z-index: 5;}
 		.showPopup:after {content: ""; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 10px solid rgba(0,0,0,0.9); position: absolute; margin-top: -5px; top: 50%; right: -10px; display: block;}
@@ -137,6 +148,20 @@ progress {background-color: #bfbfbf !important; height: 4px; width: 100%; box-sh
 .wifi {padding: 20px 20px 20px 80px; color: #235b7e; border-radius: 10px; clear: left; width: 597px; margin-top: 40px; background: #8ac5e9 url("images/wifi.png") 15px center no-repeat; background-color: rgba(138,197,233,.4);}
 	.wifi h2 {padding-bottom: 3px;}
 	.wifi big {font-size: 120%;}
+
+
+/* =========================================================
+
+        OPENVPN
+
+========================================================= */
+
+        .openvpn {padding: 20px 20px 20px 80px; color: #235b7e; border-radius: 10px; clear: left; width: 597px; margin-top: 80px; background: #8ac5e9 url("images/openvpn.png") 10px center no-repeat; background-color: rgba(138,197,233,.4);}
+        .openvpn h2 {padding-bottom: 3px;}
+        .openvpn:first-child {padding-top: 0;}
+        .openvpn progress {position: relative; top: -5px;}
+	.status-green {float: right; padding: 20px 20px 20px 40px; width: 225px; margin-top: -76px; margin-right: 295px; border-radius: 10px; background: #1eff29; font-size: 140%; font-family: 'TitilliumText22LBold';}
+	.status-red {float: right; padding: 20px 20px 20px 40px; width: 225px; margin-top: -76px; margin-right: 295px; border-radius: 10px; background: #fd291f; font-size: 140%; font-family: 'TitilliumText22LBold';}
 
 /* =========================================================
 

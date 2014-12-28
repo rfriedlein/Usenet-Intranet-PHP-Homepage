@@ -1,6 +1,7 @@
 <?php include('intranet/serverconfig.php'); ?>
 <?php include('intranet/lib/functions.php'); ?>
 <?php if($config['uTorrent']) {include('intranet/lib/utorrent_php_api.php');} ?>
+<?php if($config['deluge']) {include('intranet/lib/deluge_php_api.php');} ?>
 <?php if($config['transmission']) {include('intranet/lib/transmissionrpc.class.php');} ?>
 <!doctype html>
 <html>
@@ -114,6 +115,9 @@
 		<?php if( $config['headphones'] ) : ?>
 		<a href="<?= $headphonesURL; ?>" title="Headphones" class="actionButton big headphones"><span>Headphones</span></a>
 		<?php endif; ?>
+                <?php if( $config['deluge'] ) : ?>
+                <a href="<?= $delugeURL; ?>" title="Deluge" class="actionButton big deluge"><span>Deluge</span></a>
+                <?php endif; ?>
 
 		<?php ## SABnzbd ?>
 		<?php if( $config['sabnzbd'] ) : ?>
@@ -172,7 +176,7 @@
 		<?php ## uTorrent Web GUI ?>
 		<?php if( $config['uTorrent'] ) : ?>
 		<section class="clearfix">
-			<a href="http://<?= $config['uTorrentURL']; ?>:<?= $config['uTorrentPort']; ?>/gui/" title="uTorrent" class="actionButton big utorrent"><span>uTorrent</span></a>
+			<a href="http://<?= $config['uTorrentURL']; ?>:<?= $config['uTorrentPort']; ?>" title="Deluge" class="actionButton big utorrent"><span>Deluge Web</span></a>
 
 			<div class="downloadFrame">
 				<div class="downloadPage downloadPageCurrent">
@@ -283,6 +287,27 @@ $rpc->url = $transmissionURL."/transmission/rpc";
 
 		</div>
 
+		<div class="openvpn">
+		    <h2>External IP:</h2>
+		    <?php ## Get external IP
+		        exec('wget -qO- icanhazip.com', $ipaddy);
+                            echo implode("\n", $ipaddy);
+		    ?>
+		</div>
+
+		<div>
+		<?php ## OpenVPN running check
+			exec("pgrep openvpn", $output, $return);
+			if ($return == 0) {
+			    echo "<div class='status-green'>";
+			    echo "OpenVPN is running\n";
+			} else {
+			    echo "<div class='status-red'>";
+                            echo "OpenVPN not running\n";
+		 	}
+	        ?>
+   
+                </div>
 		<?php ## Ending check for all-disabled ?>
 		<?php endif; ?>
 

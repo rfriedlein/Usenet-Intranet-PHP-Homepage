@@ -9,6 +9,8 @@
 		"sabnzbd" => true,
 		"uTorrent" => true,
 		"transmission" => false,
+		"deluge" => false,
+                "sonarr" => false,
 
 		# URLs and Ports
 		"sickbeardURL" => "192.168.1.1",
@@ -29,6 +31,12 @@
 		"uTorrentPort" => "8089",
 		"transmissionURL" => "192.168.1.1",
 		"transmissionPort" => "9091",
+		"delugeURL" => "",
+		"delugePort" => "",
+                "sonarrURL" => "",
+		"sonarrPort" => "",
+		"sonarrAPI" => "",
+		"sonarHTTPS" => false,
 
 		# Usernames and Passwords
 		# If not using usernames or passwords, leave these to false.
@@ -41,16 +49,21 @@
 		"uTorrentPassword" => "admin",
 		"transmissionUsername" => false,
 		"transmissionPassword" => false,
+		"delugePassword" => false,
+                "sonarrUsername" => "",
+		"sonarrPassword" => "",
 
-		# Sickbeard - Missed or Coming?
+		# Sickbeard/Sonarr - Missed or Coming?
 		# Australia, for example, is almost an entire day ahead of America so American TV shows 
 		# air the day after they say they're going to air, so instead of "coming shows", we use "missed shows"
 		# to indicate what's coming out today. 
 		# Set to true for "missed", false for "coming"
 		"sickMissed" => true,
+                "sonarrMissed" => false,
 
 		# Show popups when hovering over coming shows?
 		"sickPopups" => true,
+                "sonarrPopups" => false,
 
 		# Debug
 		"debug" => false,
