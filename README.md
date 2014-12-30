@@ -5,12 +5,12 @@ A simple little one-page Intranet homepage I created for my home server with the
 
 * Buttons to go directly to:
 	* Sickbeard
-        * Sonarr
+	* Sonarr
 	* CouchPotato
 	* Headphones
 	* SABnzbd
 	* uTorrent WebUI
-        * Deluge Web
+	* Deluge Web
 	* Movie Trailers
 * Currently downloading on SABnzbd
 * Currently downloading on uTorrent (requires web ui to be enabled)
@@ -18,9 +18,10 @@ A simple little one-page Intranet homepage I created for my home server with the
 * List of TV Shows that come out today from Sonarr
 * Show Wifi Password
 * Show OpenVPN status and external IP
+* Show Network Stats
 * Completely customisable to show or hide only the features you want
 
-![screenshot](https://github.com/rfriedlein/Usenet-Intranet-PHP-Homepage/raw/master/intranet/screenshots/screen3.png)
+![screenshot](https://github.com/rfriedlein/Usenet-Intranet-PHP-Homepage/raw/master/intranet/screenshots/screen4.png)
 
 ## Installation
 
@@ -33,10 +34,11 @@ Open the config file and make the appropriate changes to the IPs, Ports, API Key
 
 Your webserver will require:
 
+* ifstat
 * wget
 * cURL 
 * PHP 
-
+ 
 ## Updating
 
 If something goes wrong after updating, please consult the latest serverconfig-example.php file. Odds are something's changed and you'll need to either:
