@@ -1,7 +1,7 @@
 <?php include('intranet/serverconfig.php'); ?>
 <?php include('intranet/lib/functions.php'); ?>
+
 <?php if($config['uTorrent']) {include('intranet/lib/utorrent_php_api.php');} ?>
-<?php if($config['deluge']) {include('intranet/lib/deluge_php_api.php');} ?>
 <?php if($config['transmission']) {include('intranet/lib/transmissionrpc.class.php');} ?>
 <!doctype html>
 <html>
@@ -9,8 +9,12 @@
 		<title><?= $config['wifiName']; ?> Intranet</title>
 		<link rel="stylesheet" href="intranet/style.css" />
 		<link rel="shortcut icon" href="favicon.ico" />
+                <script src="intranet/js/jquery.js"></script>
+                <script src="intranet/js/scripts.js"></script>
+
 	</head>
 	<body>
+
 		<h1><?= $config['wifiName']; ?> Server</h1>
 
 		<?php ## Check if everything is disabled
@@ -105,9 +109,129 @@
 		</div>
 		<?php endif; ?>
 
+                <?php if( $config['sonarr'] ) :
+                          if ( $config['sonarrMissed'] ) : $sbType = "missed"; else: $srType = "today"; endif;
+                ?>
+                <div class="sonarrShows">
+                        <h3>TV Today</h3>
+                        <?php
+
+                                // Get cURL resource
+                                $curl = curl_init('http://127.0.0.1:8085/api');
+                                // Set some options - we are passing in a useragent too here
+				    curl_setopt($curl, CURLOPT_HTTPHEADER, ['X-Api-Key' => '$my_key']);
+				    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                                // Send the request & save response to $resp
+
+ 				//$results = curl_exec($curl);
+ 				//echo $results;
+
+				$srJSONURL = curl_exec($curl);
+
+				if (curl_errno($curl)) {
+        				print "Error: " . curl_error($curl);
+    				}
+
+				//var_dump($srJSONURL);
+                                if($config['debug']) {echo "TV Today URL: ".$srJSONURL;}
+
+                                $srJSON = file_get_contents($srJSONURL);
+   				print_r($srJSON);
+                                $srShows = json_decode($srJSON);
+				print_r($srShows);
+
+                                echo "<ul class='comingShows'>";
+
+                                # List shows
+                                if(empty($srShows)){
+                                        # quick check if there are any shows today.
+                                        echo "<li>No shows today.</li>";
+                                } else {
+                                        # Run through each show
+                                        foreach($srShows->{'data'}->{$srType} as $episode) {
+                                                echo "<li>";
+
+                                                # Sonarr Popups
+                                                if($config ['sonarrPopups']) :
+                                                echo "<span class='showPopup'>";
+                                                echo "<img src='".$sonarrdURL."/MediaCover/".$episode->{'seriesId'}."/poster.jpg' class='showposter' />";
+                                                echo "</span>";
+                                                endif;
+
+                                                # Show name and number
+                                                echo "<strong class='showname'>".$episode['series']->{'title'}."</strong><br />";
+                                                echo "<strong class='showname'>".$episode['series']->{'title'}." <small>".$episode['episode']->{'title'}."x".$episode['episode']->{'episodeNumber'};
+                                                echo "</li>";
+                                        }
+                                }
+                                echo "</ul>";
+
+                                $srJSONdoneURL = $srJSONURL."/history?page=1&pageSize=15&sortKey=date&sortDir=desc&filterKey=eventType&filterValue=1";
+                                $srJSONdone = file_get_contents($srJSONdoneURL);
+                                $srShowsdone = json_decode($srJSONdone);
+                                $todaysDate = date('Y-m-d');
+
+                                if($config['debug']){echo "TV Complete Today URL: ".$srJSONdoneURL;}
+
+                                echo "<ul class='snatchedShows'>";
+
+                                # List shows
+                                # Run through each show
+                                foreach($srShowsdone->{'data'} as $episode) {
+
+                                        if (substr($episode->date,0,10) == $todaysDate && $episode->status == "grabbed") :
+
+                                                // Check Quality Snatched
+                                                if ($episode->{quality} == "SDTV") :
+                                                        $quality = "sd";
+                                                elseif ($episode->{quality} == "WEBDL-480p") :
+                                                        $quality = "sd";
+                                                elseif ($episode->{quality} == "DVD") :
+                                                        $quality = "sd";
+                                                elseif ($episode->{quality} == "HDTV-720p") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "HDTV-1080p") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "Raw-HD") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "WEBDL-720p") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "Bluray-720p") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "WEBDL-1080p") :
+                                                        $quality = "hd";
+                                                elseif ($episode->{quality} == "Bluray-1080p") :
+                                                        $quality = "hd";
+                                                endif;
+
+                                                echo "<li class=".$quality.">";
+
+                                                # Sonarr Popups
+                                                if($config ['sonarrPopups']) :
+                                                echo "<span class='showPopup'>";
+                                                echo "<img src='".$sickbeardURL."/MediaCover/".$episode->{'seriesId'}."/poster.jpg' class='showposter' />";
+                                                echo "</span>";
+                                                endif;
+
+                                                # Show name and number
+                                                echo "<strong class='showname'>".$episode['series']->{'title'}." <small>".$episode['episode']->{'title'}."x".$episode['episode']->{'episodeNumber'}."</small></strong>";
+                                                echo "</li>";
+
+                                        endif;
+
+                                }
+                                echo "</ul>";
+
+                        ?>
+                </div>
+                <?php endif; ?>
+
 		<?php ## Action Buttons ?>
 		<?php if( $config['sickbeard'] ) : ?>
-		<a href="<?= $sickbeardURL; ?>" title="SickBeard" class="actionButton big sickbeard"><span>SickBeard</span></a>
+		<a href="<?= $sickbeardURL; ?>" target="_blank" title="SickBeard" class="actionButton big sickbeard"><span>SickBeard</span></a>
+                 <?php endif; ?>
+                <?php if( $config['sonarr'] ) : ?>
+                <a href="<?= $sonarrURL; ?>" title="Sonarr" class="actionButton big sonarr"><span>Sonarr</span></a>
 		<?php endif; ?>
 		<?php if( $config['couchpotato'] ) : ?>
 		<a href="<?= $couchpotatoURL; ?>" title="CouchPoato" class="actionButton big couchpotato"><span>CouchPotato</span></a>
@@ -122,6 +246,7 @@
 		<?php ## SABnzbd ?>
 		<?php if( $config['sabnzbd'] ) : ?>
 		<a href="<?= $sabURL; ?>" title="SABnzbd" class="actionButton big sabnzb"><span>SABnzbd</span></a>
+
 
 		<div class="downloadFrame clearfix"><div class="downloadFrameSlide clearfix">
 			<div class="downloadPage downloadPageCurrent">
@@ -305,28 +430,31 @@ $rpc->url = $transmissionURL."/transmission/rpc";
 			    echo "<div class='status-red'>";
                             echo "OpenVPN not running\n";
 		 	}
-	        ?>
-   
-                </div>
+	       ?>
+		</div>
 
-                <div class="interface">
-                    <h2>Network Stats:</h2>
+                <script type="text/javascript">
 
-                <?php ## Interface Stats
+		$(function worker(){
+		    $.ajaxSetup ({
+		        cache: false,
+		        complete: function() {
+		          setTimeout(worker, 2000);
+		        }
+		    });
+//		    var ajax_load = "<img src='http://apps2.rfriedlein.com/intranet/images/loading.gif' alt='loading...' />";
+		    var loadUrl = "http://apps2.rfriedlein.com/getinterface.php";
+		    $("#interface-stats").load(loadUrl);
+		});
 
-		                $output = exec('ifstat' . ' -q -i ' . 'eth0'. ' 0.1 1');
-			                $output = preg_replace('/\s+/', ' ', $output);
+                </script>
 
-                echo 'DOWN: ' . str_replace(' ', 'Kbps   UP: ', trim($output)) . 'Kbps' . PHP_EOL;
 
-                ?>
-
-                </div>
-
+		<div class="interface"> <h2>Network Stats:</h2>
+                <div id="interface-stats">  </div>
+		<div>
 		<?php ## Ending check for all-disabled ?>
 		<?php endif; ?>
 
-		<script src="intranet/js/jquery.js"></script>
-		<script src="intranet/js/scripts.js"></script>
 	</body>
 </html>
